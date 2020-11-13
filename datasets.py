@@ -10,6 +10,8 @@ import utils.frame_utils as frame_utils
 
 from scipy.misc import imread, imresize
 
+from imutils import paths
+
 class StaticRandomCrop(object):
     def __init__(self, image_size, crop_size):
         self.th, self.tw = crop_size
@@ -324,8 +326,10 @@ class ImagesFromFolder(data.Dataset):
     self.crop_size = args.crop_size
     self.render_size = args.inference_size
     self.replicates = replicates
+    images = list(paths.list_images(root))
+    im_nums = [int(x.split('/')[-1].split('.')[0]) for x in images]
+    images = [y for  _, y in sorted(zip(im_nums, images))]
 
-    images = sorted( glob( join(root, '*.' + iext) ) )
     self.image_list = []
     for i in range(len(images)-1):
         im1 = images[i]
